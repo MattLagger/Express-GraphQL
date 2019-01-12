@@ -7,7 +7,7 @@ const {
     GraphQLInt,
 } = graphql;
 
-const {users} = require('../db.json');
+const {users, companies} = require('../db.json');
 
 
 const UserType = new GraphQLObjectType({
@@ -19,6 +19,14 @@ const UserType = new GraphQLObjectType({
     }
 });
 
+const CompanyType = new GraphQLObjectType({
+    name: 'Company',
+    fields: {
+        id: {type: GraphQLInt},
+        name: {type: GraphQLString}
+    }
+})
+
 const RootQuery = new GraphQLObjectType({
     name: "RootQueryType",
     fields: {
@@ -27,6 +35,13 @@ const RootQuery = new GraphQLObjectType({
             args: {id:{ type: GraphQLInt}},
             resolve(parentValue, args){
                 return _.find(users, {id: args.id})
+            }
+        },
+        company: {
+            type: CompanyType,
+            args: {id: {type: GraphQLInt}},
+            resolve(parentValue, args){
+                return _.find(companies, {id: args.id})
             }
         }
     }
