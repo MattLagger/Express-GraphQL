@@ -1,0 +1,12 @@
+{
+  "name": "users",
+  "version": "1.0.0",
+  "description": "Graph QL Api Example",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Wendreo Matheus <wendreo.pvh@gmail.com>",
+  "license": "ISC"
+}
