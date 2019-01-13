@@ -101,6 +101,39 @@ const mutation = new GraphQLObjectType({
                 const user = await axios.delete(`http://localhost:5000/users/${id}`)
                 return user.data;
             }
+        },
+        addCompany: {
+            type: CompanyType,
+            args: {
+                name: {type: new GraphQLNonNull(GraphQLString)},
+            },
+            async resolve(parentValue, {name}){
+                console.log(name)
+                const company = await axios.post('http://localhost:5000/companies', {name});
+                console.log(company.data);
+                return company.data;
+            }
+        },
+        editCompany:{
+            type: CompanyType,
+            args: {
+                id: {type: new GraphQLNonNull(GraphQLInt)},
+                name: {type: GraphQLString},
+            },
+            async resolve(parentValue, args){
+                const company = await axios.patch(`http://localhost:5000/companies/${args.id}`, args);
+                return company.data;
+            }
+        },
+        deleteCompany: {
+            type: CompanyType,
+            args:{
+                id:{ type: new GraphQLNonNull(GraphQLInt)}
+            },
+            async resolve(parentValue, {id}){
+                const company = await axios.delete(`http://localhost:5000/companies/${id}`)
+                return company.data;
+            }
         }
     }
 })
