@@ -4,12 +4,15 @@
   "description": "Graph QL Api Example",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon --ignore ./db.json server.js"
+    "start": "nodemon --ignore ./db.json server.js",
+    "server": "json-server --watch db.json --port=5000",
+    "seed": "node database.js"
   },
   "keywords": [],
   "author": "Wendreo Matheus <wendreo.pvh@gmail.com>",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.18.0",
     "express": "^4.16.4",
     "express-graphql": "^0.7.1",
     "graphql": "^14.0.2",

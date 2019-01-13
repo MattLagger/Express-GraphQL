@@ -1,14 +1,16 @@
 const graphql = require('graphql');
-const _ = require('lodash');
 const {
     GraphQLSchema,
     GraphQLObjectType, 
     GraphQLString, 
     GraphQLInt,
-    GraphQLList
+    GraphQLList,
+    GraphQLNonNull
 } = graphql;
-
-const {users, companies} = require('../db.json');
+const axios = require('axios');
+const _ = require('lodash');
+const {companies, users} = require('../db.json');
+const Service = require('../service');
 
 
 const UserType = new GraphQLObjectType({
@@ -19,8 +21,9 @@ const UserType = new GraphQLObjectType({
         age: {type: GraphQLInt},
         company:{
             type: CompanyType,
-            resolve(parentValue, args){
-                return _.find(companies, {id: parentValue.companyId});
+            async resolve(parentValue, args){
+                const company = await axios.get(`http://localhost:5000/companies/${parentValue.companyId}`);
+                return company.data
             }
         }
     })
@@ -33,8 +36,9 @@ const CompanyType = new GraphQLObjectType({
         name: {type: GraphQLString},
         users: {
             type: new  GraphQLList(UserType),
-            resolve(parentValue, args){
-                return _.filter(users, {companyId: parentValue.id});
+            async resolve(parentValue, args){
+                const users = await axios.get(`http://localhost:5000/companies/${parentValue.id}/users`);
+                return users.data;
             }
         }
     })
@@ -46,19 +50,38 @@ const RootQuery = new GraphQLObjectType({
         user: {
             type: UserType,
             args: {id:{ type: GraphQLInt}},
-            resolve(parentValue, args){
-                return _.find(users, {id: args.id})
+            async resolve(parentValue, args){
+                const users = await axios.get(`http://localhost:5000/users/${args.id}`);
+                return users.data;
             }
         },
         company: {
             type: CompanyType,
             args: {id: {type: GraphQLInt}},
-            resolve(parentValue, args){
-                return _.find(companies, {id: args.id})
+            async resolve(parentValue, args){
+                const companies = await axios.get(`http://localhost:5000/copanies/${args.id}`);
+                return companies.data;
             }
         }
     }
 });
+
+const mutation = new GraphQLObjectType({
+    name: 'Mutation',
+    fields: {
+        addUser: {
+            type: UserType,
+            args: {
+                firstName: {type: new GraphQLNonNull(GraphQLString)},
+                age: {type: new GraphQLNonNull(GraphQLInt)},
+                companyId: {type: GraphQLInt}
+            },
+            resolve(parentValue, args){
+
+            }
+        }
+    }
+})
 
 module.exports = new GraphQLSchema ({
     query: RootQuery
