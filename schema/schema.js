@@ -1,4 +1,6 @@
+// Import GraphQL
 const graphql = require('graphql');
+// Import Modules From GraphQL
 const {
     GraphQLSchema,
     GraphQLObjectType, 
@@ -10,15 +12,21 @@ const {
 const axios = require('axios');
 
 
+// Create a new GraphQL Object
 const UserType = new GraphQLObjectType({
+    // Object name
     name: 'User',
+    // Fields of Object and Types
     fields: () => ({
         id: {type: GraphQLInt} ,
         firstName: {type: GraphQLString},
         age: {type: GraphQLInt},
         company:{
+            // Nested Object
             type: CompanyType,
+            // Resolve to Nested Values
             async resolve(parentValue, args){
+                // Make Axios Request to Json Server
                 const company = await axios.get(`http://localhost:5000/companies/${parentValue.companyId}`);
                 return company.data
             }
@@ -41,11 +49,14 @@ const CompanyType = new GraphQLObjectType({
     })
 })
 
+// Create Root Query
 const RootQuery = new GraphQLObjectType({
     name: "RootQueryType",
     fields: {
         user: {
+            // Object Passed
             type: UserType,
+            // Args Used to Search
             args: {id:{ type: GraphQLInt}},
             async resolve(parentValue, args){
                 const users = await axios.get(`http://localhost:5000/users/${args.id}`);
@@ -63,12 +74,16 @@ const RootQuery = new GraphQLObjectType({
     }
 });
 
+// Create new Mutation Object 
 const mutation = new GraphQLObjectType({
     name: 'Mutation',
+    // Methods of mutation
     fields: {
+        // Add, Edit, Delete Users method
         addUser: {
             type: UserType,
             args: {
+                // Set FirstName and Age to be not null
                 firstName: {type: new GraphQLNonNull(GraphQLString)},
                 age: {type: new GraphQLNonNull(GraphQLInt)},
                 companyId: {type: GraphQLInt}
@@ -102,6 +117,7 @@ const mutation = new GraphQLObjectType({
                 return user.data;
             }
         },
+        // Add, Edit, Delete Company Methods
         addCompany: {
             type: CompanyType,
             args: {
@@ -138,6 +154,7 @@ const mutation = new GraphQLObjectType({
     }
 })
 
+// Exports query and mutation objects
 module.exports = new GraphQLSchema ({
     query: RootQuery,
     mutation: mutation

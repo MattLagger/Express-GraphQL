@@ -1,10 +1,12 @@
 var fs = require('fs');
 var faker = require('faker');
 
+// Generate Age Between 18 and 60
 function generateAge() {
     return Math.round(Math.random() * 42) + 18
 }
 
+// Generate new User
 function generateUser(id) {
     return {
         id,
@@ -14,6 +16,7 @@ function generateUser(id) {
     };
 }
 
+// Generate Company
 function generateCompany(id) {
     return {
         id,
@@ -21,6 +24,7 @@ function generateCompany(id) {
     }
 }
 
+// Create Databases
 function createDatabase() {
     var data = {};
     data.users = [];
@@ -39,4 +43,5 @@ function createDatabase() {
     return JSON.stringify(data);
 }
 
+// Write Document if file exists
 if(!fs.existsSync('./db.json')) fs.writeFileSync('./db.json', createDatabase());
