@@ -8,9 +8,6 @@ const {
     GraphQLNonNull
 } = graphql;
 const axios = require('axios');
-const _ = require('lodash');
-const {companies, users} = require('../db.json');
-const Service = require('../service');
 
 
 const UserType = new GraphQLObjectType({
@@ -59,7 +56,7 @@ const RootQuery = new GraphQLObjectType({
             type: CompanyType,
             args: {id: {type: GraphQLInt}},
             async resolve(parentValue, args){
-                const companies = await axios.get(`http://localhost:5000/copanies/${args.id}`);
+                const companies = await axios.get(`http://localhost:5000/companies/${args.id}`);
                 return companies.data;
             }
         }
@@ -76,13 +73,26 @@ const mutation = new GraphQLObjectType({
                 age: {type: new GraphQLNonNull(GraphQLInt)},
                 companyId: {type: GraphQLInt}
             },
-            resolve(parentValue, args){
-
+            async resolve(parentValue, {firstName, age}){
+                const user = await axios.post('http://localhost:5000/users', {firstName, age});
+                console.log(user.data);
+                return user.data;
+            }
+        },
+        deleteUser: {
+            type: UserType,
+            args:{
+                id:{ type: new GraphQLNonNull(GraphQLInt)}
+            },
+            async resolve(parentValue, {id}){
+                const user = await axios.delete(`http://localhost:5000/users/${id}`)
+                return user.data;
             }
         }
     }
 })
 
 module.exports = new GraphQLSchema ({
-    query: RootQuery
+    query: RootQuery,
+    mutation: mutation
 });

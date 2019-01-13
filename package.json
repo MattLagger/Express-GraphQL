@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "nodemon --ignore ./db.json server.js",
-    "server": "json-server --watch db.json --port=5000",
+    "server": "json-server -w db.json -p=5000",
     "seed": "node database.js"
   },
   "keywords": [],
