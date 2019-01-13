@@ -1,13 +1,13 @@
 # GraphQL/Express API example
 
 ## Instalation
->1. Download or Git Clone the Repository.
->2. Install Dependencies with `npm install`.
->3. Generate Fake Database for Json Server `npm run seed`.
->4. Start json-server to simule external API `npm run server`.
->5. Start GraphQL API `npm run start`.
->6. Access the Query Tool in path `/graphql`.
->7. Have FUN **:)**
+1. Download or Git Clone the Repository.
+2. Install Dependencies with `npm install`.
+3. Generate Fake Database for Json Server `npm run seed`.
+4. Start json-server to simule external API `npm run server`.
+5. Start GraphQL API `npm run start`.
+6. Access the Query Tool in path `/graphql`.
+7. Have FUN **:)**
 
 ### **Note:** You can reset the database, just delete db.json and run `npm run seed`.
 
