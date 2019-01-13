@@ -1,22 +1,25 @@
 # GraphQL/Express API example
 
 ## Instalation
-1. Download or Git Clone Repository.
-2. Install Dependencies with `npm install`.
-3. Generate Fake Database for Json Server `npm run seed`.
-4. Start json-server to simule external API `npm run server`.
-5. Start GraphQL API `npm run start`.
-6. Access the Query Tool in path `/graphql`.
-7. Have FUN **:)**
+>1. Download or Git Clone the Repository.
+>2. Install Dependencies with `npm install`.
+>3. Generate Fake Database for Json Server `npm run seed`.
+>4. Start json-server to simule external API `npm run server`.
+>5. Start GraphQL API `npm run start`.
+>6. Access the Query Tool in path `/graphql`.
+>7. Have FUN **:)**
 
-## Examples
-### Query a Single User by id and Return *id,firstName,age,CompanyName.
+### **Note:** You can reset the database, just delete db.json and run `npm run seed`.
+
+# Examples
+## Queries
+### Query a Single User by id and Return ***id, firstName, age, CompanyName.***
 ```js
 {
     user(id: 1){
-        id,
-        firstName,
-        age,
+        id
+        firstName
+        age
         company{
             name
         }
@@ -41,7 +44,7 @@
 }
 ```
 
-### Query a Single Company
+### Query a Single Company.
 ```js
 {
     company(id: 1){
@@ -62,13 +65,13 @@
 }
 ```
 
-### Query a Company With List of Users
+### Query a Company With List of Users.
 ```js
 {
     company(id: 1){
         name,
         users{
-            firstName,
+            firstName
             age
         }
     }
@@ -94,12 +97,12 @@
 ```
 
 
-### Use Fragment
+### Use ragment.
 
 ```js
 {
     user(id: 1){
-        firstName,
+        firstName
         ...jobFriends
     }
 }
@@ -142,11 +145,11 @@ fragment jobFriends on User{
 ```js
 {
     first: user(id: 1){
-        firstName,
+        firstName
         age
-    },
+    }
     last: user(id: 50){
-        firstName,
+        firstName
         age
     }
 }
@@ -171,8 +174,8 @@ fragment jobFriends on User{
 
 ```js 
 addUser(firstName: "John", age: 23){
-    id,
-    firstName,
+    id
+    firstName
     age
 }
 ```
@@ -193,7 +196,7 @@ addUser(firstName: "John", age: 23){
 ### Add a new company
 ```js
  addCompany(name: "SPC"){
-     id,
+     id
      name
  }
 ```
@@ -210,6 +213,138 @@ addUser(firstName: "John", age: 23){
 ````
 
 ----------
+
+## Mutations
+### Add User.
+```js
+mutation{
+    addUser(firstName: "John" age: 18){
+        id
+        firstName
+        age
+    }
+}
+```
+#### Result
+```json
+{
+    "data":{
+        "addUser":{
+            "id": 51,
+            "firstName": "John",
+            "age": 18
+        }
+    }
+}
+```
+### Edit User.
+```js
+mutation{
+    editUser(firstName: "Matt" age: 21 comapnyId: 11){
+        firstName
+        age
+        company{
+            name
+        }
+    }
+}
+```
+#### Result
+```json
+{
+    "data":{
+        "editUser":{
+            "firstName": "Matt",
+            "age": 21,
+            "company": {
+                "name": "SPC"
+            }
+        }
+    }
+}
+```
+### Remove User.
+```js
+mutation{
+    deleteUser(id: 51){
+        id
+        firstName
+        age
+    }
+}
+```
+#### Result
+```json
+{
+    "data":{
+        "addUser":{
+            "id": null,
+            "firstName": null,
+            "age": null
+        }
+    }
+}
+```
+> **Note:** Because of Json-Server not return nothing on delete the values will return null.
+### Add Company.
+```js
+mutation{
+    addCompany(name: "SPC"){
+        id
+        name
+    }
+}
+```
+### Result
+```json
+{
+    "data":{
+        "addCompany":{
+            "id": 11,
+            "name": "SPC"
+        }
+    }
+}
+```
+### Edit Company.
+```js
+mutation{
+    editCompany(id: 11 name:"Nasa"){
+        name
+    }
+}
+```
+### Result
+```json
+{
+    "data":{
+        "editCompany":{
+            "name": "Nasa"
+        }
+    }
+}
+```
+### Remove Company.
+```js
+mutation{
+    deleteCompany(id: 11){
+        name
+    }
+}
+```
+### Result
+```json
+{
+    "data":{
+        "deleteCompany":{
+            "name": null
+        }
+    }
+}
+```
+> **Note:** Because of Json-Server not return nothing on delete the values will return null.
+----------
+
 
 ## Author
 ### **Name**: Wendreo Matheus
